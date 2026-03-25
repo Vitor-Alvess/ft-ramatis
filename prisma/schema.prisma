@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Address {
+  id           BigInt   @id @default(autoincrement())
+  cep          String
+  street       String
+  number       String
+  complement   String?
+  neighborhood String
+  uf           String
+  city         String
+  clients      Client[]
+}
+
+model Client {
+  id        BigInt   @id @default(autoincrement())
+  name      String
+  cpf       String
+  ddd       String
+  phone     String
+  idAddress BigInt
+  address   Address  @relation(fields: [idAddress], references: [id])
+  sales     Sale[]
+  createdAt DateTime @default(now())
+}
+
+model Item {
+  id                BigInt     @id @default(autoincrement())
+  description       String
+  category          Int
+  availableQuantity Int
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime?
+  size              String
+  value             Decimal
+  saleItems         SaleItem[]
+}
+
+model Pattern {
+  id          BigInt     @id @default(autoincrement())
+  description String?
+  bucketPath  String?
+  createdAt   DateTime   @default(now())
+  sellItems   SaleItem[]
+}
+
+model Sale {
+  id            BigInt     @id @default(autoincrement())
+  status        String     @default("PENDENTE_ENVIO")
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime?
+  totalAmount   Decimal
+  saleItems     SaleItem[]
+  idClient      BigInt
+  client        Client    @relation(fields: [idClient], references: [id])
+}
+
+model SaleItem {
+  id        BigInt  @id @default(autoincrement())
+  idItem    BigInt
+  idSell    BigInt
+  idPattern BigInt
+  quantity  Int
+  item      Item    @relation(fields: [idItem], references: [id])
+  sell      Sale    @relation(fields: [idSell], references: [id])
+  pattern   Pattern @relation(fields: [idPattern], references: [id])
+}

@@ -1,12 +1,38 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
+# Dependencies
+node_modules
+package-lock.json
+yarn.lock
+.pnp
 .pnp.js
 
-# testing
+# Next.js
+.next
+build
+out
+dist
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Development
+.DS_Store
+*.pem
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Testing
 /coverage
+
+# Database
+dev.db
+dev.db-journal
 
 # next.js
 /.next/
