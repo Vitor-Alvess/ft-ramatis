@@ -1,0 +1,90 @@
+---
+description: React component patterns and best practices
+globs:
+  - "**/components/**/*.tsx"
+  - "**/screens/**/*.tsx"
+alwaysApply: false
+---
+
+# React Component Standards
+
+## Component Structure
+```typescript
+interface ComponentProps {
+  required: string;
+  optional?: boolean;
+  className?: string;
+  children?: React.ReactNode;
+}
+
+export const Component = ({
+  required,
+  optional = false,
+  className,
+  children,
+}: ComponentProps): React.JSX.Element => {
+  // 1. Hooks
+  const [state, setState] = useState<string>("");
+  
+  // 2. Derived state
+  const derivedValue = useMemo(() => {
+    return computeExpensiveValue(state);
+  }, [state]);
+  
+  // 3. Effects
+  useEffect(() => {
+    // effect logic
+  }, [dependency]);
+  
+  // 4. Handlers
+  const handleClick = useCallback(() => {
+    // handler logic
+  }, [dependency]);
+  
+  // 5. Render
+  return (
+    <div className={className}>
+      {children}
+    </div>
+  );
+};
+```
+
+## File Organization
+- One component per file
+- Co-locate component-specific types
+- Export component as named export
+- Place styles in same directory
+
+## Client Components
+- Only use "use client" when necessary:
+  - useState, useEffect, useReducer
+  - onClick, onChange handlers
+  - Browser APIs (window, document)
+  - Third-party client libraries
+
+## Performance
+- Use React.memo for expensive components
+- Use useMemo for expensive computations
+- Use useCallback for stable references
+- Implement lazy loading for heavy components
+
+## Styling with Tailwind
+```tsx
+<div className={cn(
+  // Base styles
+  "flex items-center justify-center",
+  // Spacing
+  "p-4 m-2",
+  // Colors & effects
+  "bg-white text-black shadow-lg",
+  // States
+  "hover:scale-105 focus:outline-none",
+  // Responsive
+  "md:p-6 lg:p-8",
+  // Conditional
+  isActive && "bg-blue-500",
+  // External classes
+  className
+)} />
+```

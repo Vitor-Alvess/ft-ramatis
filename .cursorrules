@@ -1,0 +1,254 @@
+# Cursor Rules for React Template
+
+## Project Context
+You are working on a modern Next.js 15 application with TypeScript, Tailwind CSS, and strict coding standards. This is a production-ready template designed for scalability and maintainability.
+
+## Code Style Rules
+
+### TypeScript Requirements
+- **ALWAYS** use TypeScript with strict mode
+- **ALWAYS** define explicit return types for functions
+- **ALWAYS** use interfaces with 'I' prefix (e.g., `IUser`, `IProduct`)
+- **NEVER** use `any` type - use `unknown` or proper types instead
+- **ALWAYS** handle null/undefined cases explicitly
+
+### React/Next.js Patterns
+```typescript
+// Component template
+interface IComponentProps {
+  required: string;
+  optional?: boolean;
+  className?: string;
+}
+
+export const Component = ({
+  required,
+  optional = false,
+  className,
+}: IComponentProps): React.JSX.Element => {
+  return <div className={className}>{/* content */}</div>;
+};
+```
+
+### File Organization
+- Place components in `/src/components/[Category]/[ComponentName]/`
+- Each component folder should contain:
+  - `index.tsx` - Main component
+  - `[ComponentName].types.ts` - TypeScript interfaces
+  - `[ComponentName].utils.ts` - Helper functions (if needed)
+  - `[ComponentName].test.tsx` - Tests (if applicable)
+
+### Import Order
+1. React/Next.js imports
+2. Third-party libraries
+3. Internal imports (use @/ alias)
+4. Relative imports
+5. CSS/styles
+
+### State Management Rules
+- Use `useState` for simple local state
+- Use `useReducer` for complex state logic
+- Use URL params for shareable state
+- Use Server Components by default
+- Add "use client" only when necessary
+
+### Tailwind CSS Guidelines
+```tsx
+// Organize classes logically
+<div className={`
+  // Layout
+  flex items-center justify-between
+  // Spacing
+  p-4 mb-6
+  // Sizing
+  w-full max-w-4xl
+  // Typography
+  text-lg font-medium
+  // Colors
+  bg-white text-gray-900
+  // Borders & Effects
+  border rounded-lg shadow-sm
+  // Transitions
+  transition-all duration-200
+  // States
+  hover:shadow-md active:scale-[0.98]
+  // Responsive
+  md:p-6 lg:p-8
+`} />
+```
+
+### API & Data Fetching
+- Use Server Components for initial data
+- Use actions pattern for mutations
+- Always validate and sanitize inputs
+- Handle errors gracefully with try-catch
+- Return proper status codes
+
+### Performance Rules
+- Lazy load heavy components with `dynamic()`
+- Use Next.js Image component for all images
+- Minimize client-side JavaScript
+- Implement proper caching strategies
+- Monitor bundle size
+
+### Security Requirements
+- Never expose sensitive data in client code
+- Validate on both client and server
+- Use environment variables for secrets
+- Sanitize user inputs
+- Implement proper CORS policies
+
+### Testing Approach
+- Write tests for critical business logic
+- Test user interactions
+- Mock external dependencies
+- Use descriptive test names
+- Maintain high code coverage
+
+### Error Handling
+```typescript
+try {
+  const result = await riskyOperation();
+  return result;
+} catch (error) {
+  console.error('Operation failed:', error);
+  // User-friendly error handling
+  throw new Error('Something went wrong. Please try again.');
+}
+```
+
+### Git Commit Convention
+- `feat:` New feature
+- `fix:` Bug fix
+- `docs:` Documentation
+- `style:` Formatting
+- `refactor:` Code restructuring
+- `test:` Tests
+- `chore:` Maintenance
+
+## Component Categories
+
+### UI Components (`/components/ui/`)
+- Button, Input, Card, Modal, etc.
+- Pure, reusable, no business logic
+- Accept all styling props
+
+### Layout Components (`/components/layout/`)
+- Header, Footer, Sidebar, Container
+- Handle page structure
+- Responsive by default
+
+### Feature Components (`/components/features/`)
+- Business-specific components
+- Can contain state and logic
+- May connect to APIs
+
+### HOCs & Hooks (`/hooks/`)
+- Custom hooks for reusable logic
+- Follow `use` naming convention
+- Document usage examples
+
+## DO's
+✅ Write self-documenting code
+✅ Use semantic HTML elements
+✅ Implement accessibility (ARIA)
+✅ Follow DRY principles
+✅ Write pure functions when possible
+✅ Use early returns for clarity
+✅ Destructure props
+✅ Use optional chaining
+✅ Implement loading states
+
+## DON'Ts
+❌ Use inline styles
+❌ Mutate state directly
+❌ Use `var` keyword
+❌ Ignore TypeScript errors
+❌ Use magic numbers
+❌ Create god components
+❌ Mix concerns
+❌ Skip error boundaries
+❌ Forget cleanup in useEffect
+
+## Code Review Checklist
+- [ ] TypeScript types are proper
+- [ ] No `any` types used
+- [ ] Components are reusable
+- [ ] Code is DRY
+- [ ] Errors are handled
+- [ ] Loading states exist
+- [ ] Accessibility considered
+- [ ] Performance optimized
+- [ ] Security checked
+- [ ] Tests written
+
+## Performance Patterns
+
+### Memoization
+```typescript
+import { memo, useMemo, useCallback } from 'react';
+
+// Memoize components
+export const ExpensiveComponent = memo(({ data }: Props) => {
+  // Component logic
+});
+
+// Memoize values
+const expensiveValue = useMemo(() => {
+  return computeExpensiveValue(data);
+}, [data]);
+
+// Memoize callbacks
+const handleClick = useCallback(() => {
+  // Handler logic
+}, [dependency]);
+```
+
+### Code Splitting
+```typescript
+import dynamic from 'next/dynamic';
+
+const HeavyComponent = dynamic(
+  () => import('@/components/HeavyComponent'),
+  {
+    loading: () => <Skeleton />,
+    ssr: false // if needed
+  }
+);
+```
+
+## Common Utilities
+
+### API Helpers
+```typescript
+export async function fetcher<T>(url: string): Promise<T> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+}
+```
+
+### Type Guards
+```typescript
+export function isError(error: unknown): error is Error {
+  return error instanceof Error;
+}
+```
+
+### Format Helpers
+```typescript
+export const formatCurrency = (amount: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(amount);
+};
+```
+
+## Resources
+- Next.js Docs: https://nextjs.org/docs
+- TypeScript Handbook: https://www.typescriptlang.org/docs/
+- Tailwind CSS: https://tailwindcss.com/docs
+- React Patterns: https://react.dev/learn

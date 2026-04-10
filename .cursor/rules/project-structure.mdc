@@ -1,0 +1,80 @@
+---
+description: Project structure and organization guidelines
+alwaysApply: true
+---
+
+# Project Structure Guidelines
+
+## Directory Organization
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── api/               # API routes
+│   ├── (auth)/           # Auth route group
+│   ├── (marketing)/      # Marketing pages
+│   └── (dashboard)/      # Dashboard pages
+├── components/            # Shared UI components
+│   ├── ui/              # Base UI components
+│   ├── forms/           # Form components
+│   └── layouts/         # Layout components
+├── screens/              # Feature-specific views
+│   └── [feature]/
+│       ├── [Feature]View.tsx
+│       ├── components/   # Feature components
+│       ├── sections/    # Page sections
+│       └── hooks/       # Feature hooks
+├── actions/             # Server actions
+├── services/            # External services
+├── hooks/               # Custom React hooks
+├── utils/               # Utility functions
+├── lib/                 # Third-party configs
+├── interfaces/          # TypeScript interfaces
+├── types/               # TypeScript types
+├── constants/           # App constants
+├── config/              # App configuration
+├── mocks/              # Mock data
+└── styles/             # Global styles
+```
+
+## File Naming Conventions
+- Components: `PascalCase.tsx`
+- Utilities: `camelCase.ts`
+- Hooks: `use[HookName].ts`
+- Constants: `CONSTANT_NAME.ts` or `constants.ts`
+- Types/Interfaces: `IEntityName.ts` or `types.ts`
+- Tests: `[name].test.ts` or `[name].spec.ts`
+
+## Import Rules
+- Use absolute imports with @/ alias
+- Group imports by category
+- Order: React/Next → Third-party → Internal → Relative
+
+## Component Organization
+- One component per file
+- Co-locate related files (styles, tests, types)
+- Keep components focused and single-purpose
+- Extract complex logic to custom hooks
+
+## Feature Organization
+Each feature should have:
+- View component (container)
+- Section components (layout)
+- UI components (presentation)
+- Actions (data operations)
+- Types (TypeScript definitions)
+- Tests (unit and integration)
+
+## Code Colocation
+Keep related code together:
+- Component + styles + tests
+- Feature + actions + types
+- Utils + tests
+
+## Barrel Exports
+Use index.ts for clean imports:
+```typescript
+// components/index.ts
+export { Button } from "./Button";
+export { Card } from "./Card";
+export { Input } from "./Input";
+```

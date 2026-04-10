@@ -1,0 +1,316 @@
+# React Template - Cursor Rules
+
+project_type: nextjs_typescript_template
+framework: next_15_app_router
+language: typescript_strict
+ui_library: react_19
+
+# Project Structure
+structure:
+  src_directory: "src/"
+  components: "src/components"
+  screens: "src/screens"
+  api_routes: "src/app/api"
+  actions: "src/actions"
+  interfaces: "src/interfaces"
+  utils: "src/utils"
+  constants: "src/constants"
+
+# Naming Rules
+naming:
+  components: PascalCase
+  files:
+    components: "*.tsx"
+    utilities: "*.ts"
+    styles: "*.css"
+  variables: camelCase
+  constants: UPPER_SNAKE_CASE
+  interfaces: IPrefix
+  types: PascalCase
+  functions: camelCase
+
+# TypeScript Configuration
+typescript:
+  strict: true
+  no_any: true
+  explicit_returns: true
+  interface_prefix: "I"
+  type_imports: true
+
+# React Patterns
+react:
+  version: "19"
+  component_style: functional
+  hooks_only: true
+  props_destructuring: true
+
+# Import Rules
+imports:
+  order:
+    - "react/next"
+    - "third_party"
+    - "@/* (absolute)"
+    - "relative"
+  use_type_imports: true
+  absolute_imports: "@/"
+
+# Tailwind CSS
+tailwind:
+  version: "4"
+  class_order:
+    - layout
+    - flexbox/grid
+    - spacing
+    - sizing
+    - typography
+    - backgrounds
+    - borders
+    - effects
+    - filters
+    - transitions
+    - interactivity
+    - svg
+    - accessibility
+
+# Component Template
+component_template: |
+  interface ${1:Component}Props {
+    ${2:// props}
+    className?: string;
+  }
+  
+  export const ${1:Component} = ({
+    className,
+  }: ${1:Component}Props): React.JSX.Element => {
+    return (
+      <div className={className}>
+        ${3:// content}
+      </div>
+    );
+  };
+
+# View Template
+view_template: |
+  import Header from "@/components/Header";
+  import { Footer } from "@/components/Footer";
+  
+  export default function ${1:Feature}View(): React.JSX.Element {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <Header />
+        <main className="flex-1">
+          ${2:// sections}
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+# API Route Template
+api_template: |
+  import { NextRequest, NextResponse } from "next/server";
+  
+  export async function GET(request: NextRequest) {
+    try {
+      ${1:// implementation}
+      return NextResponse.json(data);
+    } catch (error) {
+      console.error("Error:", error);
+      return NextResponse.json(
+        { error: "Internal server error" },
+        { status: 500 }
+      );
+    }
+  }
+
+# Action Template
+action_template: |
+  export async function ${1:fetchResource}(): Promise<${2:IResource}[]> {
+    const response = await fetch("/api/${3:resource}");
+    if (!response.ok) {
+      throw new Error(`Failed: ${response.status}`);
+    }
+    return response.json();
+  }
+
+# Code Snippets
+snippets:
+  # React Hooks
+  useState:
+    prefix: "us"
+    body: "const [${1:state}, set${1/(.*)/${1:/capitalize}/}] = useState<${2:type}>(${3:initial});"
+  
+  useEffect:
+    prefix: "ue"
+    body: |
+      useEffect(() => {
+        ${1:// effect}
+      }, [${2:deps}]);
+  
+  # Components
+  component:
+    prefix: "rfc"
+    body: |
+      interface ${TM_FILENAME_BASE}Props {
+        className?: string;
+      }
+      
+      export const ${TM_FILENAME_BASE} = ({ className }: ${TM_FILENAME_BASE}Props): React.JSX.Element => {
+        return (
+          <div className={className}>
+            ${1:// content}
+          </div>
+        );
+      };
+  
+  client_component:
+    prefix: "rfcc"
+    body: |
+      "use client";
+      
+      import { useState } from "react";
+      
+      interface ${TM_FILENAME_BASE}Props {
+        className?: string;
+      }
+      
+      export const ${TM_FILENAME_BASE} = ({ className }: ${TM_FILENAME_BASE}Props): React.JSX.Element => {
+        const [state, setState] = useState();
+        
+        return (
+          <div className={className}>
+            ${1:// content}
+          </div>
+        );
+      };
+
+# Commands
+commands:
+  dev: "npm run dev"
+  build: "npm run build"
+  start: "npm start"
+  lint: "npm run lint"
+  format: "npm run format"
+  typecheck: "npm run type-check"
+
+# Editor Settings
+editor:
+  tabSize: 2
+  insertSpaces: true
+  formatOnSave: true
+  codeActionsOnSave:
+    - "source.fixAll.eslint"
+    - "source.organizeImports"
+
+# Linting Rules
+linting:
+  extends:
+    - "next/core-web-vitals"
+    - "next/typescript"
+  rules:
+    no-console: "warn"
+    no-unused-vars: "error"
+    prefer-const: "error"
+
+# Git
+git:
+  ignore:
+    - node_modules
+    - .next
+    - .env.local
+    - "*.log"
+  hooks:
+    pre-commit: "npm run lint && npm run type-check"
+
+# Common Patterns
+patterns:
+  loading:
+    pattern: |
+      const [isLoading, setIsLoading] = useState(false);
+      const [error, setError] = useState<Error | null>(null);
+  
+  fetch:
+    pattern: |
+      try {
+        setIsLoading(true);
+        const data = await fetchData();
+      } catch (err) {
+        setError(err as Error);
+      } finally {
+        setIsLoading(false);
+      }
+  
+  conditional_render:
+    pattern: |
+      {condition && <Component />}
+      {condition ? <A /> : <B />}
+
+# Autocomplete
+autocomplete:
+  tailwind:
+    - "flex items-center justify-center"
+    - "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+    - "container mx-auto px-4"
+    - "absolute inset-0"
+    - "transition-all duration-300"
+    - "hover:scale-105"
+    - "rounded-lg shadow-md"
+    - "bg-background text-foreground"
+  
+  imports:
+    - "import { useState, useEffect } from 'react'"
+    - "import type { Metadata } from 'next'"
+    - "import { NextRequest, NextResponse } from 'next/server'"
+    - "import Image from 'next/image'"
+    - "import Link from 'next/link'"
+
+# Quick Actions
+quick_actions:
+  create_component: "Create in src/components/{name}.tsx"
+  create_view: "Create in src/screens/{feature}/{Feature}View.tsx"
+  create_api: "Create in src/app/api/{resource}/route.ts"
+  create_action: "Create in src/actions/{resource}.ts"
+  create_interface: "Create in src/interfaces/I{Name}.ts"
+  create_util: "Create in src/utils/{name}.ts"
+
+# DO's
+do:
+  - Use TypeScript strict mode
+  - Follow component hierarchy
+  - Implement error boundaries
+  - Use semantic HTML
+  - Apply Tailwind utilities
+  - Handle loading states
+  - Validate inputs
+  - Test edge cases
+  - Document complex logic
+  - Use absolute imports
+
+# DON'Ts
+dont:
+  - Use 'any' type
+  - Commit secrets
+  - Ignore TypeScript errors
+  - Use inline styles
+  - Create mega components
+  - Fetch in loops
+  - Skip accessibility
+  - Mix concerns
+  - Use console.log in production
+  - Nest ternaries deeply
+
+# Performance
+performance:
+  use_server_components: true
+  lazy_load_images: true
+  code_split: true
+  minimize_client_js: true
+  optimize_fonts: true
+
+# Security
+security:
+  validate_inputs: true
+  sanitize_html: true
+  use_env_variables: true
+  implement_cors: true
+  add_security_headers: true

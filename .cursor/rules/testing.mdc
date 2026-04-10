@@ -1,0 +1,87 @@
+---
+description: Testing patterns and best practices
+globs:
+  - "**/*.test.ts"
+  - "**/*.test.tsx"
+  - "**/*.spec.ts"
+  - "**/*.spec.tsx"
+alwaysApply: false
+---
+
+# Testing Standards
+
+## Unit Tests
+```typescript
+import { render, screen, fireEvent } from "@testing-library/react";
+import { Component } from "./Component";
+
+describe("Component", () => {
+  it("should render correctly", () => {
+    render(<Component text="Test" />);
+    expect(screen.getByText("Test")).toBeInTheDocument();
+  });
+
+  it("should handle click events", () => {
+    const handleClick = jest.fn();
+    render(<Component onClick={handleClick} />);
+    
+    fireEvent.click(screen.getByRole("button"));
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("should display error state", () => {
+    render(<Component error="Error message" />);
+    expect(screen.getByText("Error message")).toBeInTheDocument();
+  });
+});
+```
+
+## Integration Tests
+```typescript
+describe("API Integration", () => {
+  it("should fetch and display data", async () => {
+    render(<DataComponent />);
+    
+    // Wait for data to load
+    await screen.findByText("Loaded Data");
+    
+    // Verify data is displayed
+    expect(screen.getByText("Item 1")).toBeInTheDocument();
+  });
+
+  it("should handle API errors", async () => {
+    // Mock API failure
+    server.use(
+      rest.get("/api/data", (req, res, ctx) => {
+        return res(ctx.status(500));
+      })
+    );
+
+    render(<DataComponent />);
+    
+    await screen.findByText("Error loading data");
+  });
+});
+```
+
+## Testing Patterns
+- Arrange, Act, Assert pattern
+- Test behavior, not implementation
+- Use meaningful test descriptions
+- Group related tests with describe blocks
+- Mock external dependencies
+- Test error states and edge cases
+
+## Coverage Goals
+- Aim for 80% code coverage
+- 100% coverage for critical paths
+- Test all exported functions
+- Cover error handling
+- Test accessibility
+
+## Best Practices
+- Keep tests isolated and independent
+- Use data-testid for complex selectors
+- Avoid testing implementation details
+- Write tests before fixing bugs
+- Update tests when changing functionality

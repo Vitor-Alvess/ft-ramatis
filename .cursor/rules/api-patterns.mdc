@@ -1,0 +1,114 @@
+---
+description: API routes and server action patterns
+globs:
+  - "**/api/**/*.ts"
+  - "**/actions/**/*.ts"
+alwaysApply: false
+---
+
+# API and Server Action Patterns
+
+## API Route Handler
+```typescript
+import { NextRequest, NextResponse } from "next/server";
+
+export async function GET(request: NextRequest) {
+  try {
+    // Validation
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    
+    if (!id) {
+      return NextResponse.json(
+        { error: "ID is required" },
+        { status: 400 }
+      );
+    }
+    
+    // Business logic
+    const data = await fetchData(id);
+    
+    // Success response
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error("API Error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    // Parse body
+    const body = await request.json();
+    
+    // Validation
+    if (!body.name) {
+      return NextResponse.json(
+        { error: "Name is required" },
+        { status: 400 }
+      );
+    }
+    
+    // Process
+    const result = await createEntity(body);
+    
+    // Return created resource
+    return NextResponse.json(result, { status: 201 });
+  } catch (error) {
+    console.error("API Error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+```
+
+## Server Actions
+```typescript
+"use server";
+
+import { revalidatePath } from "next/cache";
+
+export async function createEntity(data: IEntityInput): Promise<IEntity> {
+  try {
+    // Validation
+    validateInput(data);
+    
+    // Business logic
+    const entity = await db.entity.create({
+      data,
+    });
+    
+    // Revalidate cache
+    revalidatePath("/entities");
+    
+    return entity;
+  } catch (error) {
+    console.error("Action Error:", error);
+    throw new Error("Failed to create entity");
+  }
+}
+```
+
+## Error Handling
+- Always wrap in try-catch
+- Log errors with context
+- Return appropriate HTTP status codes
+- Provide meaningful error messages
+- Never expose sensitive information
+
+## Response Standards
+- Use consistent response format
+- Include appropriate status codes
+- Set proper headers
+- Handle CORS if needed
+
+## Performance
+- Implement caching strategies
+- Use pagination for lists
+- Optimize database queries
+- Add rate limiting for public endpoints
