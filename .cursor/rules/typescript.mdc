@@ -1,0 +1,60 @@
+---
+description: TypeScript standards and conventions
+globs:
+  - "**/*.ts"
+  - "**/*.tsx"
+alwaysApply: true
+---
+
+# TypeScript Standards
+
+## Type Safety
+- Use TypeScript strict mode
+- Avoid `any` type - use `unknown` or specific types
+- Define explicit return types for functions
+- Use interfaces with 'I' prefix (e.g., `IUser`, `IProduct`)
+
+## Naming Conventions
+- Interfaces: `IEntityName`
+- Types: `EntityType`
+- Enums: `PascalCase`
+- Constants: `UPPER_SNAKE_CASE` or `camelCase`
+- Functions: `camelCase`
+- Classes: `PascalCase`
+
+## Type Patterns
+```typescript
+// Interface with I prefix
+export interface IEntity {
+  id: string;
+  name: string;
+  createdAt: Date;
+}
+
+// Explicit return types
+export const fetchEntity = async (id: string): Promise<IEntity> => {
+  // implementation
+};
+
+// Type guards
+export const isEntity = (value: unknown): value is IEntity => {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "id" in value &&
+    "name" in value
+  );
+};
+```
+
+## Error Handling
+- Always handle errors in async functions
+- Use custom error types when appropriate
+- Provide meaningful error messages
+
+## Import Organization
+1. React/Next imports
+2. Third-party libraries
+3. Internal imports (use @/ alias)
+4. Relative imports
+5. Styles

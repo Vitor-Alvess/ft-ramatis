@@ -1,0 +1,120 @@
+---
+description: Next.js App Router conventions and patterns
+globs:
+  - "**/app/**/*.tsx"
+  - "**/app/**/*.ts"
+alwaysApply: false
+---
+
+# Next.js App Router Patterns
+
+## Page Components
+```typescript
+// app/[route]/page.tsx
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Page Title",
+  description: "Page description",
+};
+
+interface PageProps {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function Page({ params, searchParams }: PageProps) {
+  const { id } = await params;
+  const search = await searchParams;
+  
+  // Fetch data
+  const data = await fetchData(id);
+  
+  return <PageView data={data} />;
+}
+```
+
+## Layouts
+```typescript
+// app/[route]/layout.tsx
+export default function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="container">
+      <Header />
+      <main>{children}</main>
+      <Footer />
+    </div>
+  );
+}
+```
+
+## Loading States
+```typescript
+// app/[route]/loading.tsx
+export default function Loading() {
+  return <LoadingSpinner />;
+}
+```
+
+## Error Handling
+```typescript
+// app/[route]/error.tsx
+"use client";
+
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  return (
+    <div>
+      <h2>Something went wrong!</h2>
+      <p>{error.message}</p>
+      <button onClick={reset}>Try again</button>
+    </div>
+  );
+}
+```
+
+## Not Found
+```typescript
+// app/[route]/not-found.tsx
+export default function NotFound() {
+  return (
+    <div>
+      <h2>404 - Page Not Found</h2>
+      <p>Could not find the requested resource</p>
+    </div>
+  );
+}
+```
+
+## Route Groups
+- Use (folder) for route groups that don't affect URL
+- Example: (auth), (marketing), (dashboard)
+
+## Parallel Routes
+- Use @folder for parallel routes
+- Useful for modals, sidebars
+
+## Dynamic Routes
+- [id] - Dynamic segment
+- [...slug] - Catch-all segment
+- [[...slug]] - Optional catch-all
+
+## Metadata
+- Use generateMetadata for dynamic metadata
+- Export metadata object for static metadata
+- Implement Open Graph and Twitter cards
+
+## Data Fetching
+- Fetch data in Server Components
+- Use cache and revalidate options
+- Implement proper error boundaries
+- Stream data with Suspense when appropriate
